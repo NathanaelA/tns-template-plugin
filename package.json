@@ -1,0 +1,32 @@
+{
+  "name": "tns-template-plugin",
+  "version": "1.0.0",
+  "description": "A NativeScript plugin generator seed",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nathanaela/tns-template-plugin.git"
+  },
+  "keywords": [
+    "NativeScript", "plugin", "generator", "seed", "template"
+  ],
+  "author": {
+    "name": "Nathanael Anderson",
+    "email": "nathan@master-technology.com"
+  },
+  "license": {
+    "type": "MIT",
+    "url": "https://github.com/nathanaela/tns-template-plugin/blob/master/LICENSE"
+  },
+  "bugs": {
+    "url": "https://github.com/tns-template-plugin/issues"
+  },
+  "homepage": "https://github.com/tns-template-plugin",
+  "readmeFilename": "README.md",
+  "scripts": {
+    "setup-plugin": "node post-ip.js",
+    "setupplugin": "node post-ip.js",
+    "postinstall": "node post-ip.js"
+  }
+
+}
