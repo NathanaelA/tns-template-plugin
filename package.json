@@ -24,9 +24,9 @@
   "homepage": "https://github.com/tns-template-plugin",
   "readmeFilename": "README.md",
   "scripts": {
-    "setup-plugin": "node post-ip.js",
-    "setupplugin": "node post-ip.js",
-    "postinstall": "node post-ip.js"
+    "setup-plugin": "node setup.js",
+    "setupplugin": "node setup.js",
+    "postinstall": "node setup.js"
   }
 
 }
