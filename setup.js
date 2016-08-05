@@ -5,12 +5,12 @@
  * I do contract work in most languages, so let me solve your problems!
  *
  * Any questions please feel free to email me or put a issue up on the github repo
- * Version 1.0.0                                      Nathan@master-technology.com
+ * Version 1.0.1                                      Nathan@master-technology.com
  *********************************************************************************/
 "use strict";
 
 // TODO: pull the version from the github repo
-const TYPESCRIPT_VERSION = "^1.8.10";
+//const TYPESCRIPT_VERSION = "^1.8.10";
 
 const child = require('child_process');
 const readline = require('readline');
@@ -20,7 +20,7 @@ const cp = require('child_process');
 var debug = false;
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template 					  v1.00");
+console.log("NativeScript Plugin Template 					  v1.01");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
@@ -158,7 +158,7 @@ askQuestions(questions,
         // Grab the year since we use it in different places
         results.year = (new Date().getFullYear());
 
-        // If this is cloned from my HD
+        // If this is cloned from my HD and we are debugging, we don't want to kill the .idea folder ;-)
         if (!debug && fs.existsSync(".idea")) {
             recursiveDelete(".idea");
         }
@@ -187,6 +187,9 @@ askQuestions(questions,
         generatePackage(results);
         console.log("Generating index files...");
         generateIndex(results);
+        console.log("Generating ignore files...");
+        generateIgnores(results);
+
         if (results.script === "typescript") {
             console.log("Generating tconfig.json file...");
             generateTSConfig(results);
@@ -219,6 +222,10 @@ askQuestions(questions,
         console.log("  npm run debug.ios     = Will debug your demo under the iOS emulator" );
         console.log("  npm run debug.android = Will debug your demo under the android emulator" );
 
+        // If this is in a npm module; the platforms doesn't get saved into it
+        if (!fs.existsSync("platforms")) { fs.mkdirSync("platforms"); }
+
+        // We are done, so delete this script...
         fs.unlinkSync('setup.js');
         process.exit(0);
     }
@@ -581,6 +588,78 @@ function generateReadme(answers) {
         data += "## Example\r\n\r\n";
     }
     fs.writeFileSync("README.md", data);
+}
+
+/**
+ * Creates ignore files
+ * @param answers
+ */
+function generateIgnores(answers) {
+
+    // If the ignore file exists we don't overwrite them
+    if (fs.existsSync('.gitignore')) { return; }
+
+    var gitIgnore = "\
+.idea/\r\n\
+.vscode/\r\n\
+.tscache/\r\n\
+/demo/node_modules/\r\n\
+/demo/platforms/\r\n\
+node_modules/\r\n\
+.settings/\r\n\
+\r\n\
+.DS_Store\r\n\
+*.js.map\r\n\
+*.tar\r\n\
+*.tgz\r\n\
+*.gz\r\n\
+*.zip\r\n";
+
+    fs.writeFileSync(".gitignore", gitIgnore);
+
+    var npmIgnore = "\
+demo/\r\n\
+.git/\r\n\
+.idea/\r\n\
+docs/\r\n\
+bin/\r\n\
+tests/\r\n\
+screenshots/\r\n\
+.vs/\r\n\
+.settings/\r\n\
+.vscode/\r\n\
+node_modules/\r\n\
+.tscache/\r\n\
+\r\n\
+.gitignore\r\n\
+.npmignore\r\n\
+.DS_Store\r\n\
+.editorconfig\r\n\
+.bablerc\r\n\
+.eslintignore\r\n\
+.travis.yml\r\n\
+.jshintrc\r\n\
+*.sln\r\n\
+*.md\r\n\
+*.tmp\r\n\
+*.log\r\n\
+*.ts\r\n\
+*.js.map\r\n\
+*.tar\r\n\
+*.tgz\r\n\
+*.gz\r\n\
+*.zip\r\n\
+references.d.ts\r\n\
+tsconfig.json\r\n\
+tslint.json\r\n\
+karma.conf.js\r\n\
+typings.json\r\n\
+typedoc.json\r\n";
+
+    fs.writeFileSync(".npmignore", npmIgnore);
+
+
+
 }
 
 /**
