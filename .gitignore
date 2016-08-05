@@ -1,3 +1,14 @@
-/.idea
+.idea/
+.vscode/
+.tscache/
 /demo/node_modules/
 /demo/platforms/
+node_modules/
+.settings/
+
+.DS_Store
+*.js.map
+*.tar
+*.tgz
+*.gz
+*.zip

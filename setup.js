@@ -166,7 +166,7 @@ askQuestions(questions,
 		if (!fs.existsSync("demo")) {
 			cp.spawnSync("tns",["create","demo"]);
 		}
-		console.log("\r\n\r\n\r\n------------------[ Plugin Setup ]------------------");
+		console.log("\r\n\r\n\r\n-----------------------[ Plugin Setup ]--------------------------");
 		console.log("Plugin quick commands are: ");
 		console.log("  npm run demo.ios      = Will run your demo under the iOS emulator" );
 		console.log("  npm run demo.android  = Will run your demo under the android emulator" );

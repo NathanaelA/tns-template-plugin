@@ -28,6 +28,7 @@ node_modules/
 *.tar
 *.tgz
 *.gz
+*.zip
 
 references.d.ts
 tsconfig.json
