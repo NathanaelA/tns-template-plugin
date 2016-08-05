@@ -5,7 +5,7 @@
  * I do contract work in most languages, so let me solve your problems!
  *
  * Any questions please feel free to email me or put a issue up on the github repo
- * Version 1.0.4                                      Nathan@master-technology.com
+ * Version 1.0.5                                      Nathan@master-technology.com
  *********************************************************************************/
 "use strict";
 
@@ -18,7 +18,7 @@ var debug = false;
 var indexName = "index";
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template                      v1.04");
+console.log("NativeScript Plugin Template                      v1.05");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
@@ -692,7 +692,7 @@ typedoc.json\r\n";
  */
 function completer(line) {
     var completions = completer.data;
-    var hits = completions.filter(function(c) { return c.indexOf(line) === 0; });
+    var hits = completions.filter(function(c) { return c.toLowerCase().indexOf(line.toLowerCase()) === 0; });
     return [hits.length ? hits : completions, line];
 }
 
