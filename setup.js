@@ -5,12 +5,9 @@
  * I do contract work in most languages, so let me solve your problems!
  *
  * Any questions please feel free to email me or put a issue up on the github repo
- * Version 1.0.2                                      Nathan@master-technology.com
+ * Version 1.0.4                                      Nathan@master-technology.com
  *********************************************************************************/
 "use strict";
-
-// TODO: pull the version from the github repo
-//const TYPESCRIPT_VERSION = "^1.8.10";
 
 const child = require('child_process');
 const readline = require('readline');
@@ -18,9 +15,10 @@ const fs = require('fs');
 const cp = require('child_process');
 
 var debug = false;
+var indexName = "index";
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template                      v1.02");
+console.log("NativeScript Plugin Template                      v1.04");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
@@ -84,6 +82,10 @@ if (startupChoices.single_files) {
     answers.output_files = "single";
 }
 
+if (startupChoices.name_type) {
+    answers.name_type = startupChoices.name_type;
+}
+
 // Defaults Questions
 var questions = [];
 
@@ -116,7 +118,11 @@ if (!answers.license) {
 }
 
 if (!answers.output_files) {
-    questions.push({name: 'output_files', question: 'Do you prefer a single index.js, or separate platform version indexes? ', answers: ['single', 'dual']});
+    questions.push({name: 'output_files', question: 'Plugin need a single source code file, or separate platform specific versions? ', answers: ['single', 'one', 'dual', 'two', 'separate']});
+}
+
+if (!answers.name_type) {
+    questions.push({name: 'name_type', question: 'Do you prefer the source file to be named index or the plugin name? ', answers: ['index', 'plugin']});
 }
 
 if (!answers.github) {
@@ -163,6 +169,11 @@ askQuestions(questions,
             recursiveDelete(".idea");
         }
 
+        // Eliminate our docs folder
+        if (fs.existsSync("docs")) {
+            recursiveDelete("docs");
+        }
+
         // if this is cloned from a git repo
         if (fs.existsSync(".git")) {
             recursiveDelete(".git");
@@ -175,6 +186,10 @@ askQuestions(questions,
             } catch(err) {
                 // Can't create our home setting directory, not a big issue; we can still complete the process.
             }
+        }
+
+        if (results.name_type === "plugin") {
+            indexName = results.plugin.toLowerCase();
         }
 
         // OK so at this point we have all the answers we need; lets get to creating
@@ -401,14 +416,14 @@ function generateTSConfig(answers) {
         };
     }
 
-    if (answers.output_files === "single") {
-        data.files.push("index.ts");
+    if (answers.output_files === "single" || answers.output_files === "one") {
+        data.files.push(indexName+".ts");
     } else {
         if (answers.os === "android" || answers.os === "both") {
-            data.files.push("index.android.ts");
+            data.files.push(indexName+".android.ts");
         }
         if (answers.script === "ios" || answers.os === "both") {
-            data.files.push('index.ios.ts');
+            data.files.push(indexName+'.ios.ts');
         }
     }
 
@@ -432,24 +447,30 @@ function generateIndex(answers) {
     if (fs.existsSync('index.js')) {
         var indexFile = fs.readFileSync('index.js').toString();
         if (indexFile.indexOf("// 01010011 01110100 01101111 01110000") === -1) { return; }
+    } else {
+        // If it doesn't exist; then that means we have already deleted it...
+        return;
     }
+
+    // Eliminate our "STOP" JS file since we no longer need it...
+    fs.unlinkSync('index.js');
 
     if (answers.script === "javascript") {
 
-        data += "function "+answers.plugin+"() { \r\n // Put in your initialization\r\n}\r\n\r\nmodules.exports = answers.plugin;\r\n";
+        data += "function "+answers.plugin+"() { \r\n // Put in your initialization\r\n}\r\n\r\nmodules.exports = "+answers.plugin+";\r\n";
 
         if (fs.existsSync(homePath + "files/index.js")) {
             data = renderData(fs.readFileSync(homePath + "files/index.js").toString(), answers);
         }
 
-        if (answers.output_files === "single") {
-            fs.writeFileSync('index.js', data);
+        if (answers.output_files === "single" || answers.output_files === "one") {
+            fs.writeFileSync(indexName+'.js', data);
         } else {
             if (answers.os === "android" || answers.os === "both") {
-                fs.writeFileSync('index.android.js', data);
+                fs.writeFileSync(indexName+'.android.js', data);
             }
             if (answers.os === "ios" || answers.os === "both") {
-                fs.writeFileSync('index.ios.js', data);
+                fs.writeFileSync(indexName+'.ios.js', data);
             }
         }
 
@@ -460,18 +481,16 @@ function generateIndex(answers) {
             data = renderData(fs.readFileSync(homePath + "files/index.ts").toString(), answers);
         }
 
-        if (answers.output_files === "single") {
-            fs.writeFileSync('index.ts', data);
+        if (answers.output_files === "single" || answers.output_files === "one") {
+            fs.writeFileSync(indexName+'.ts', data);
         } else {
             if (answers.os === "android" || answers.os === "both") {
-                fs.writeFileSync('index.android.ts', data);
+                fs.writeFileSync(indexName+'.android.ts', data);
             }
             if (answers.os === "ios" || answers.os === "both") {
-                fs.writeFileSync('index.ios.ts', data);
+                fs.writeFileSync(indexName+'.ios.ts', data);
             }
         }
-        // Eliminate JS file since we no longer need it...
-        fs.unlinkSync('index.js');
 
     }
 
@@ -499,7 +518,7 @@ function generatePackage(answers) {
             name: "nativescript-" + answers.plugin,
             version: "1.0.0",
             description: "A plugin by " + answers.name.toProperCase(),
-            main: "index.js",  // Yes this is correct, the final file deployed to device MUST be JS
+            main: indexName+".js",  // Yes this is correct, the final file deployed to device MUST be JS
             typings: "index.d.ts",
             nativescript: {
                 platforms: {}
@@ -564,7 +583,7 @@ function generatePackage(answers) {
     } else {
         data.scripts.start = "npm run demo.android";
     }
-    data.scripts['setup-plugin'] = 'node '+ homePath + "setup.js";
+    //data.scripts['setup-plugin'] = 'node '+ homePath + "setup.js";
 
     fs.writeFileSync("package.json", JSON.stringify(data, null, 4));
 }
@@ -751,6 +770,14 @@ function getCommandLine() {
                 delete commandLine.os;
             }
         }
+        if (value === '-naming' || value === '--naming' || value === '/naming') {
+            commandLine.name_type = process.argv[i+1].toLowerCase(); i++;
+            // Verify choice
+            if (commandLine.name_type !== 'plugin' && commandLine.name_type !== 'index' ) {
+                delete commandLine.name_type;
+            }
+        }
+
         if (value === '-debug' || value === '--debug' || value === '/debug') {
             commandLine.debug = true;
         }
@@ -767,7 +794,7 @@ function getCommandLine() {
  Save our common questions so we don't have to answer them again...
  */
 function saveNewAnswers(results) {
-    var newData = {name: results.name, github: results.github, email: results.email, license: results.license, output_files: results.output_files};
+    var newData = {name: results.name, github: results.github, email: results.email, license: results.license, name_type: results.name_type};
     if (!fs.existsSync(homePath)) {
         fs.mkdirSync(homePath);
         fs.mkdirSync(homePath+"files");
@@ -789,6 +816,7 @@ function displayHelp() {
     console.log("  -dual or --dual     = both platform files index.android.?s & index.ios.?s generated");
     console.log("  -license <name>     = license to use");
     console.log("  -target <name>      = Target to run (android, ios, both)");
+    console.log("  -naming <name>      = Plugin name type (index or plugin)");
 }
 
 function generateLicense(answers) {
