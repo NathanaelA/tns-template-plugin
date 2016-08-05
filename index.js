@@ -24,5 +24,5 @@
 //                                                               ppppppppp
 //
 
-// If you are reading this; then you haven't done a "npm run setup-plugin" yet.
-// Close all the files and run the "npm run setup-plugin" to properly configure the plugin.
+// If you are reading this; then you haven't done a "npm start" yet.
+// Close all the files out of any editors and run the "npm start" to properly configure the plugin.
