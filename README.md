@@ -35,7 +35,14 @@ I also do contract work; so if you have a module you want built for NativeScript
 Please feel free to fork this repo and update it!!!
 
 ## Instructions
-After cloning the repo; type **npm start**, answer a couple questions and it will re-write the repo to match you plugin type you desire. 
+Simple Instructions
+```
+git clone https://github.com/NathanaelA/tns-template-plugin nativescript-plugin-name
+cd nativescript-plugin-name
+npm start
+```
+
+Basically After cloning the repo into whereever you want it; type **npm start**, answer a couple questions and it will re-write the repo to match you plugin type you desire. 
 
 ## Features
 $HOME/.tns-plugin/ folder is used to store settings and additional files you may want added to any new plugins.
