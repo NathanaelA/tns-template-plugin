@@ -5,7 +5,7 @@
  * I do contract work in most languages, so let me solve your problems!
  *
  * Any questions please feel free to email me or put a issue up on the github repo
- * Version 1.0.1                                      Nathan@master-technology.com
+ * Version 1.0.2                                      Nathan@master-technology.com
  *********************************************************************************/
 "use strict";
 
@@ -20,7 +20,7 @@ const cp = require('child_process');
 var debug = false;
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template 					  v1.01");
+console.log("NativeScript Plugin Template                      v1.02");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
@@ -191,7 +191,7 @@ askQuestions(questions,
         generateIgnores(results);
 
         if (results.script === "typescript") {
-            console.log("Generating tconfig.json file...");
+            console.log("Generating tsconfig.json file...");
             generateTSConfig(results);
         }
         console.log("Generating License...");
@@ -204,7 +204,11 @@ askQuestions(questions,
                 tns = "tns.cmd";
                 npm = "npm.cmd";
             }
-            cp.spawnSync(tns,["create","demo", results.script === "typescript" ? '--tsc' : ''], {cwd: process.cwd(), maxBuffer: 1000000});
+            var options = ["create","demo"];
+            if (results.script === 'typescript') {
+              options.push('--tsc');
+            }
+            cp.spawnSync(tns, options, {cwd: process.cwd(), maxBuffer: 1000000});
             if (fs.existsSync('demo')) {
                 if (results.script === "typescript") {
                     console.log("Installing typescript support files");

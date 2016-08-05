@@ -1,6 +1,6 @@
 {
   "name": "tns-template-plugin",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A NativeScript plugin generator seed",
   "main": "index.js",
   "repository": {
@@ -26,7 +26,8 @@
   "scripts": {
     "setup-plugin": "node setup.js",
     "setupplugin": "node setup.js",
-    "postinstall": "node setup.js"
+    "postinstall": "node setup.js",
+    "start": "node setup.js"
   }
 
 }
