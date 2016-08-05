@@ -5,7 +5,7 @@
  * I do contract work in most languages, so let me solve your problems!
  *
  * Any questions please feel free to email me or put a issue up on the github repo
- * Version 1.0.5                                      Nathan@master-technology.com
+ * Version 1.0.6                                      Nathan@master-technology.com
  *********************************************************************************/
 "use strict";
 
@@ -18,7 +18,7 @@ var debug = false;
 var indexName = "index";
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template                      v1.05");
+console.log("NativeScript Plugin Template                      v1.06");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
@@ -96,7 +96,7 @@ if (!answers.plugin) {
 if (!answers.script) {
     questions.push({
         name: "script",
-        question: "Will the plugin be TypeScript or JavaScript? ",
+        question: "Will the plugin be (TypeScript) or (JavaScript)? ",
         answers: ["JavaScript", "TypeScript"]
     });
 }
@@ -104,7 +104,7 @@ if (!answers.script) {
 if (!answers.os) {
     questions.push({
         name: "os",
-        question: "Is the Plugin for Android, iOS or both? ",
+        question: "Is the Plugin for (Android), (iOS) or (both)? ",
         answers: ['Both', 'iOS', 'Android']
     });
 }
@@ -118,11 +118,11 @@ if (!answers.license) {
 }
 
 if (!answers.output_files) {
-    questions.push({name: 'output_files', question: 'Plugin need a single source code file, or separate platform specific versions? ', answers: ['single', 'one', 'dual', 'two', 'separate']});
+    questions.push({name: 'output_files', question: 'Plugin need a (single) source code file, or (both) platform specific files? ', answers: ['single', 'one', 'dual', 'two', 'separate', 'both']});
 }
 
 if (!answers.name_type) {
-    questions.push({name: 'name_type', question: 'Do you prefer the source file to be named index or the plugin name? ', answers: ['index', 'plugin']});
+    questions.push({name: 'name_type', question: 'Do you prefer the source file to be named (index) or the (plugin) name? ', answers: ['index', 'plugin']});
 }
 
 if (!answers.github) {
