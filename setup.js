@@ -228,7 +228,7 @@ askQuestions(questions,
                 if (results.script === "typescript") {
                     console.log("Installing typescript support files");
                     cp.spawnSync(npm, ['install', 'add', 'tns-platform-declarations','--save-dev'],{cwd: process.cwd()+"/demo", maxBuffer: 1000000});
-                    cp.spawnSync(tns,["install","typescript"], {cwd: process.cwd()+"/demo", maxBuffer: 1000000});
+                    //cp.spawnSync(tns,["install","typescript"], {cwd: process.cwd()+"/demo", maxBuffer: 1000000});
                 }
             } else {
                 console.log("Unable to install demo, for a demo project type **tns create demo** in your plugins folder.");
