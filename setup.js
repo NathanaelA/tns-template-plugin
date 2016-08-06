@@ -503,7 +503,8 @@ function generateIndex(answers) {
  */
 function generateClassName(pluginName) {
     var className = pluginName.replace("-", " ")
-                             .replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();});
+                              .replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();})
+                              .replace(/\s+/g, '');
     return className;
 }
 
