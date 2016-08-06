@@ -228,7 +228,7 @@ askQuestions(questions,
                 if (results.script === "typescript") {
                     console.log("Installing typescript support files");
                     cp.spawnSync(npm, ['install', 'add', 'tns-platform-declarations','--save-dev'],{cwd: process.cwd()+"/demo", maxBuffer: 1000000});
-                    cp.spawnSync(tns,["install","typescript"], {cwd: process.cwd()+"/demo", maxBuffer: 1000000});
+                    //cp.spawnSync(tns,["install","typescript"], {cwd: process.cwd()+"/demo", maxBuffer: 1000000});
                 }
             } else {
                 console.log("Unable to install demo, for a demo project type **tns create demo** in your plugins folder.");
@@ -475,7 +475,7 @@ function generateIndex(answers) {
         }
 
     } else {
-        data += "export class "+answers.plugin+" { \r\n  constructor() {\r\n    // Put in your initialization\r\n  }\r\n}\r\n";
+        data += "export class " + generateClassName(answers.plugin) + " { \r\n  constructor() {\r\n    // Put in your initialization\r\n  }\r\n}\r\n";
 
         if (fs.existsSync(homePath + "files/index.ts")) {
             data = renderData(fs.readFileSync(homePath + "files/index.ts").toString(), answers);
@@ -495,6 +495,17 @@ function generateIndex(answers) {
     }
 
     fs.writeFileSync("index.d.ts", "//--------------------------\r\n// "+answers.plugin+" typings file.\r\n//--------------------------");
+}
+
+/**
+ * Generates the TypeScript class name from plugin name using the Pascal case convention 
+ * @param pluginName
+ */
+function generateClassName(pluginName) {
+    var className = pluginName.replace("-", " ")
+                              .replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();})
+                              .replace(/\s+/g, '');
+    return className;
 }
 
 /**
