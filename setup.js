@@ -475,7 +475,7 @@ function generateIndex(answers) {
         }
 
     } else {
-        data += "export class "+answers.plugin+" { \r\n  constructor() {\r\n    // Put in your initialization\r\n  }\r\n}\r\n";
+        data += "export class " + generateClassName(answers.plugin) + " { \r\n  constructor() {\r\n    // Put in your initialization\r\n  }\r\n}\r\n";
 
         if (fs.existsSync(homePath + "files/index.ts")) {
             data = renderData(fs.readFileSync(homePath + "files/index.ts").toString(), answers);
@@ -495,6 +495,16 @@ function generateIndex(answers) {
     }
 
     fs.writeFileSync("index.d.ts", "//--------------------------\r\n// "+answers.plugin+" typings file.\r\n//--------------------------");
+}
+
+/**
+ * Generates the TypeScript class name from plugin name using the Pascal case convention 
+ * @param pluginName
+ */
+function generateClassName(pluginName) {
+    var className = s.replace("-", " ")
+                     .replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();});
+    return className;
 }
 
 /**
