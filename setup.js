@@ -502,8 +502,8 @@ function generateIndex(answers) {
  * @param pluginName
  */
 function generateClassName(pluginName) {
-    var className = s.replace("-", " ")
-                     .replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();});
+    var className = className.replace("-", " ")
+                             .replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();});
     return className;
 }
 
