@@ -5,9 +5,13 @@
  * I do contract work in most languages, so let me solve your problems!
  *
  * Any questions please feel free to email me or put a issue up on the github repo
- * Version 1.0.6                                      Nathan@master-technology.com
+ * Version 1.0.7                                      Nathan@master-technology.com
  *********************************************************************************/
 "use strict";
+
+// TODO: Maybe Add ~/.gitconfig reader, requires embedding a simple .ini reader
+// This could save three "initial" questions
+// TODO: Finish "default" answer support
 
 const child = require('child_process');
 const readline = require('readline');
@@ -18,7 +22,7 @@ var debug = false;
 var indexName = "index";
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template                      v1.06");
+console.log("NativeScript Plugin Template                      v1.07");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
@@ -26,6 +30,12 @@ console.log("-------------------------------------------------------");
 const homePath = getUserHomePath() + "/.tns-plugin/";
 
 var startupChoices = getCommandLine();
+
+if (startupChoices.packageModifictions) {
+    handlePackageModifications(startupChoices);
+    process.exit(0);
+}
+
 
 // We need to create the typing interface for the typing of answers
 const rl = readline.createInterface({
@@ -91,6 +101,14 @@ var questions = [];
 
 if (!answers.plugin) {
     questions.push({ name: "plugin", question: "What is the name of your plugin? "});
+}
+
+if (!answers.description) {
+    questions.push({ name: "description", question: "The short description of your plugin? "});
+}
+
+if (!answers.keywords) {
+    questions.push({name: "keywords", question: "Any plugin keywords (separate by commas)? "});
 }
 
 if (!answers.script) {
@@ -164,7 +182,7 @@ askQuestions(questions,
         // Grab the year since we use it in different places
         results.year = (new Date().getFullYear());
 
-        // If this is cloned from my HD and we are debugging, we don't want to kill the .idea folder ;-)
+        // If this is cloned from my HD and we are debugging, we don't want to kill the .idea folder -- phpStorm hates that!
         if (!debug && fs.existsSync(".idea")) {
             recursiveDelete(".idea");
         }
@@ -228,7 +246,6 @@ askQuestions(questions,
                 if (results.script === "typescript") {
                     console.log("Installing typescript support files");
                     cp.spawnSync(npm, ['install', 'add', 'tns-platform-declarations','--save-dev'],{cwd: process.cwd()+"/demo", maxBuffer: 1000000});
-                    //cp.spawnSync(tns,["install","typescript"], {cwd: process.cwd()+"/demo", maxBuffer: 1000000});
                 }
             } else {
                 console.log("Unable to install demo, for a demo project type **tns create demo** in your plugins folder.");
@@ -300,6 +317,9 @@ function askQuestions(questions, callback) {
     var answers = [];
     var callbackCheck = function(answer) {
         if (answer != null) {
+            if (answer === "" && questions[answers.length].default) {
+                answer = questions[answers.length].default;
+            }
             answers.push({name: questions[answers.length].name, answer: answer});
         }
         if (answers.length === questions.length) {
@@ -311,7 +331,6 @@ function askQuestions(questions, callback) {
     callbackCheck();
 }
 
-// TODO: Maybe create a Default answer, would make this script a bit smarter.
 /**
  * Asks  single question
  * @param question
@@ -528,7 +547,7 @@ function generatePackage(answers) {
         data = {
             name: "nativescript-" + answers.plugin,
             version: "1.0.0",
-            description: "A plugin by " + answers.name.toProperCase(),
+            description: answers.description,
             main: indexName+".js",  // Yes this is correct, the final file deployed to device MUST be JS
             typings: "index.d.ts",
             nativescript: {
@@ -555,6 +574,16 @@ function generatePackage(answers) {
             homepage: "https://github.com/" + answers.github + "/nativescript-" + answers.plugin,
             readmeFilename: "README.md"
         };
+    }
+
+    if (answers.keywords.length) {
+        var keywords = answers.keywords.split(",");
+        for (var i=0;i<keywords.length;i++) {
+            kw = keywords[i].trim();
+            if (kw.length > 0) {
+                data.keywords.push(kw);
+            }
+        }
     }
 
     if (answers.os === "android" || answers.os=== "both") {
@@ -615,7 +644,7 @@ function generateReadme(answers) {
         data = fs.readFileSync(homePath+"files/Readme.md").toString();
         data = renderData(data, answers);
     } else {
-        data = "# " + answers.plugin.toProperCase() + "\r\nFill in a little about your plugin!\r\n\r\n";
+        data = "# NativeScript-" + answers.plugin.toProperCase() + "\r\n" + answers.description+"\r\n\r\nFill in a little about your plugin!\r\n\r\n";
         data += "## License\r\nThis plugin is licensed under the " + answers.license.toUpperCase() + "license by "+answers.name.toProperCase()+"\r\n\r\n";
         data += "## Installation\r\nTo install type\r\n\r\n```\r\ntns plugin add nativescript-" + answers.plugin + "\r\n```\r\n\r\n";
         data += "## Usages\r\n\r\n";
@@ -748,6 +777,7 @@ function strPadding(length) {
 }
 
 
+// TODO: Make this a simpler function, use a sub-function to check for the variations
 /**
  * Parse the command line
  * @returns {{}}
@@ -788,10 +818,15 @@ function getCommandLine() {
                 delete commandLine.name_type;
             }
         }
-
         if (value === '-debug' || value === '--debug' || value === '/debug') {
             commandLine.debug = true;
         }
+
+        if (value === '-contributor' || value === '--contributor' || value === '/contributor') {
+            commandLine.packageModification = true;
+            commandLine.contributor = process.argv[i+1].toLowerCase(); i++;
+        }
+
 
         if (value === '?' || value === '/?' || value === '-help' || value === '/help') {
             displayHelp();
