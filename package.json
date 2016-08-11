@@ -1,6 +1,6 @@
 {
   "name": "tns-template-plugin",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "A NativeScript plugin generator seed",
   "main": "index.js",
   "repository": {
@@ -19,6 +19,11 @@
       "name": "Alexander Ziskind",
       "email": "alex@nuvious.com",
       "url": "https://github.com/alexziskind1"
+    },
+    {
+      "name": "TJ VanToll",
+      "email": "tj.vantoll@gmail.com",
+      "url": "https://github.com/tjvantoll"
     }
   ],
   "license": {

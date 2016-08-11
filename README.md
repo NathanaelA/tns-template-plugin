@@ -48,4 +48,5 @@ When parsing the files, the generator will look for any `\[[name]]`, `\[[github]
 
 ## Contributors
 
-Alexander Ziskind / https://github.com/alexziskind1
+[Alexander Ziskind](https://github.com/alexziskind1)
+[TJ VanToll](https://github.com/tjvantoll)

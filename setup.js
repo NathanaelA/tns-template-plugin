@@ -5,7 +5,7 @@
  * I do contract work in most languages, so let me solve your problems!
  *
  * Any questions please feel free to email me or put a issue up on the github repo
- * Version 1.0.7                                      Nathan@master-technology.com
+ * Version 1.0.8                                      Nathan@master-technology.com
  *********************************************************************************/
 "use strict";
 
@@ -31,10 +31,11 @@ const homePath = getUserHomePath() + "/.tns-plugin/";
 
 var startupChoices = getCommandLine();
 
-if (startupChoices.packageModifictions) {
+// TODO: Future enhancement
+/* if (startupChoices.packageModifictions) {
     handlePackageModifications(startupChoices);
     process.exit(0);
-}
+} */
 
 
 // We need to create the typing interface for the typing of answers
@@ -225,24 +226,29 @@ askQuestions(questions,
         console.log("Generating License...");
         generateLicense(results);
 
+        var tns = "tns";
+        var npm = "npm";
+        if (process.platform === 'win32') {
+            tns = "tns.cmd";
+            npm = "npm.cmd";
+        }
+
         if (!fs.existsSync("demo")) {
             console.log("Please wait creating demo project... (This might take a while)");
-            var tns = "tns";
-            var npm = "npm";
-            if (process.platform === 'win32') {
-                tns = "tns.cmd";
-                npm = "npm.cmd";
-            }
             var options = ["create","demo"];
             if (results.script === 'typescript') {
               options.push('--tsc');
             }
+            // Create the Demo
             cp.spawnSync(tns, options, {cwd: process.cwd(), maxBuffer: 1000000});
+
             if (fs.existsSync('demo')) {
+                // Add Platform Declarations
                 if (results.script === "typescript") {
                     console.log("Installing typescript support files");
                     cp.spawnSync(npm, ['install', 'tns-platform-declarations','--save-dev'],{cwd: process.cwd()+"/demo", maxBuffer: 1000000});
                 }
+
             } else {
                 console.log("Unable to install demo, for a demo project type **tns create demo** in your plugins folder.");
             }
@@ -252,6 +258,16 @@ askQuestions(questions,
             console.log("Generating tsconfig.json file...");
             generateTSConfig(results);
         }
+
+
+        if (fs.existsSync("demo")) {
+            console.log("Installing plugin shell in demo...");
+            // Add the plugin initially
+            cp.spawnSync(tns, ['plugin', 'add', '..'], {stdio:'inherit', cwd: process.cwd() + "/demo", maxBuffer: 1000000});
+        } else {
+            console.log("Demo not detected???");
+        }
+
 
 
         console.log("\r\n\r\n\r\n-----------------------[ Plugin Setup ]--------------------------");
@@ -539,10 +555,10 @@ function generateIndex(answers) {
  * @param pluginName
  */
 function generateClassName(pluginName) {
-    var className = pluginName.replace("-", " ")
+    return pluginName.replace("-", " ")
                               .replace(/\w+/g, function(w){return w[0].toUpperCase() + w.slice(1).toLowerCase();})
                               .replace(/\s+/g, '');
-    return className;
+
 }
 
 /**
@@ -673,9 +689,8 @@ function generateReadme(answers) {
 
 /**
  * Creates ignore files
- * @param answers
  */
-function generateIgnores(answers) {
+function generateIgnores() {
 
     // If the ignore file exists we don't overwrite them
     if (fs.existsSync('.gitignore')) { return; }
@@ -769,7 +784,7 @@ function getUserHomePath() {
 function recursiveDelete(path) {
     if( fs.existsSync(path) ) {
         var files = fs.readdirSync(path);
-        files.forEach(function(file,index){
+        files.forEach(function(file){
             var curPath = path + "/" + file;
             if(fs.lstatSync(curPath).isDirectory()) { // recurse
                 recursiveDelete(curPath);
