@@ -717,6 +717,7 @@ docs/\r\n\
 bin/\r\n\
 tests/\r\n\
 screenshots/\r\n\
+graphics/\r\n\
 .vs/\r\n\
 .settings/\r\n\
 .vscode/\r\n\

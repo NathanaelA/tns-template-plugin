@@ -5,6 +5,7 @@ docs/
 bin/
 tests/
 screenshots/
+graphics/
 .vs/
 .settings/
 .vscode/
