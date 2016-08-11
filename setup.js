@@ -404,8 +404,6 @@ function renderData(data, answers) {
 
         var curAnswer = answers[key].toString();
         switch (key) {
-            case 'name':
-                curAnswer = curAnswer.toProperCase(); break;
             case 'license':
                 curAnswer = curAnswer.toUpperCase(); break;
         }
@@ -488,7 +486,7 @@ function generateTSConfig(answers) {
 function generateIndex(answers) {
     var data =
         "/**********************************************************************************\r\n" +
-        "* (c) " + answers.year + ", " + answers.name.toProperCase() + ".\r\n" +
+        "* (c) " + answers.year + ", " + answers.name + ".\r\n" +
         "* Licensed under the " + answers.license.toUpperCase() + " license.\r\n" +
         "*\r\n" +
         "* Version 1.0.0  " + strPadding(66-answers.email.length)+answers.email + "\r\n" +
@@ -593,7 +591,7 @@ function generatePackage(answers) {
                 "NativeScript", answers.plugin
             ],
             author: {
-                name: answers.name.toProperCase(),
+                name: answers.name,
                 email: answers.email
             },
             license: {
@@ -677,7 +675,7 @@ function generateReadme(answers) {
         data = renderData(data, answers);
     } else {
         data = "# NativeScript-" + answers.plugin.toProperCase() + "\r\n" + answers.description+"\r\n\r\nFill in a little about your plugin!\r\n\r\n";
-        data += "## License\r\nThis plugin is licensed under the " + answers.license.toUpperCase() + "license by "+answers.name.toProperCase()+"\r\n\r\n";
+        data += "## License\r\nThis plugin is licensed under the " + answers.license.toUpperCase() + "license by "+answers.name+"\r\n\r\n";
         data += "## Installation\r\nTo install type\r\n\r\n```\r\ntns plugin add nativescript-" + answers.plugin + "\r\n```\r\n\r\n";
         data += "## Usages\r\n\r\n";
         data += "## Example\r\n\r\n";
