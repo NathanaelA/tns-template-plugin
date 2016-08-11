@@ -579,7 +579,7 @@ function generatePackage(answers) {
     if (answers.keywords.length) {
         var keywords = answers.keywords.split(",");
         for (var i=0;i<keywords.length;i++) {
-            kw = keywords[i].trim();
+            var kw = keywords[i].trim();
             if (kw.length > 0) {
                 data.keywords.push(kw);
             }
