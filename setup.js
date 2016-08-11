@@ -22,7 +22,7 @@ var debug = false;
 var indexName = "index";
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template                      v1.07");
+console.log("NativeScript Plugin Template                      v1.08");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
@@ -222,13 +222,9 @@ askQuestions(questions,
         generateIndex(results);
         console.log("Generating ignore files...");
         generateIgnores(results);
-
-        if (results.script === "typescript") {
-            console.log("Generating tsconfig.json file...");
-            generateTSConfig(results);
-        }
         console.log("Generating License...");
         generateLicense(results);
+
         if (!fs.existsSync("demo")) {
             console.log("Please wait creating demo project... (This might take a while)");
             var tns = "tns";
@@ -245,12 +241,19 @@ askQuestions(questions,
             if (fs.existsSync('demo')) {
                 if (results.script === "typescript") {
                     console.log("Installing typescript support files");
-                    cp.spawnSync(npm, ['install', 'add', 'tns-platform-declarations','--save-dev'],{cwd: process.cwd()+"/demo", maxBuffer: 1000000});
+                    cp.spawnSync(npm, ['install', 'tns-platform-declarations','--save-dev'],{cwd: process.cwd()+"/demo", maxBuffer: 1000000});
                 }
             } else {
                 console.log("Unable to install demo, for a demo project type **tns create demo** in your plugins folder.");
             }
         }
+
+        if (results.script === "typescript") {
+            console.log("Generating tsconfig.json file...");
+            generateTSConfig(results);
+        }
+
+
         console.log("\r\n\r\n\r\n-----------------------[ Plugin Setup ]--------------------------");
         console.log("Plugin quick commands are: ");
         console.log("  npm run demo.ios      = Will run your demo under the iOS emulator" );
@@ -426,13 +429,29 @@ function generateTSConfig(answers) {
                 "declaration": true
             },
             "files": [
-                "demo/node_modules/tns-core-modules/tns-core-modules.d.ts",
-                "demo/node_modules/tns-platform-declarations/android17.d.ts",
-                "demo/node_modules/tns-platform-declarations/ios.d.ts",
-                "demo/node_modules/tns-platform-declarations/org.nativescript.widgets.d.ts"
+                "demo/node_modules/tns-core-modules/tns-core-modules.d.ts"
+                ]
             ],
             "compileOnSave": false
         };
+    }
+
+    // See where they ended up because v2.20 of the tns-platform-decs has a weird path
+    // It is either a mis-build or they are looking to move them into tns-core-modules
+    // So we will just attempt to figure out where the files ended up; so that we can
+    // point to the proper version no matter where it got installed.  ;-)
+    if (fs.existsSync('demo/node_modules/tns-core-modules/ios.d.ts')) {
+        data.files.push("demo/node_modules/tns-core-modules/android17.d.ts");
+        data.files.push("demo/node_modules/tns-core-modules/ios.d.ts");
+        data.files.push("demo/node_modules/tns-core-modules/org.nativescript.widgets.d.ts");
+    } else if (fs.existsSync('demo/node_modules/tns-platform-declarations/ios.d.ts')) {
+        data.files.push("demo/node_modules/tns-platform-declarations/android17.d.ts");
+        data.files.push("demo/node_modules/tns-platform-declarations/ios.d.ts");
+        data.files.push("demo/node_modules/tns-platform-declarations/org.nativescript.widgets.d.ts");
+    } else if (fs.existsSync('demo/node_modules/tns-platform-declarations/tns-core-modules/ios.d.ts')) {
+        data.files.push("demo/node_modules/tns-platform-declarations/tns-core-modules/android17.d.ts");
+        data.files.push("demo/node_modules/tns-platform-declarations/tns-core-modules/ios.d.ts");
+        data.files.push("demo/node_modules/tns-platform-declarations/tns-core-modules/org.nativescript.widgets.d.ts");
     }
 
     if (answers.output_files === "single" || answers.output_files === "one") {
