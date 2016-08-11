@@ -263,9 +263,7 @@ askQuestions(questions,
         if (fs.existsSync("demo")) {
             console.log("Installing plugin shell in demo...");
             // Add the plugin initially
-            cp.spawnSync(tns, ['plugin', 'add', '..'], {stdio:'inherit', cwd: process.cwd() + "/demo", maxBuffer: 1000000});
-        } else {
-            console.log("Demo not detected???");
+            cp.spawnSync(tns, ['plugin', 'add', '..'], {/* stdio:'inherit',*/ cwd: process.cwd() + "/demo", maxBuffer: 1000000});
         }
 
 
