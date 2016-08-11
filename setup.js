@@ -5,7 +5,7 @@
  * I do contract work in most languages, so let me solve your problems!
  *
  * Any questions please feel free to email me or put a issue up on the github repo
- * Version 1.0.8                                      Nathan@master-technology.com
+ * Version 1.0.9                                      Nathan@master-technology.com
  *********************************************************************************/
 "use strict";
 
@@ -22,7 +22,7 @@ var debug = false;
 var indexName = "index";
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template                      v1.08");
+console.log("NativeScript Plugin Template                      v1.09");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
