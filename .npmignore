@@ -31,6 +31,8 @@ node_modules/
 *.gz
 *.zip
 
+!*.d.ts
+
 references.d.ts
 tsconfig.json
 tslint.json
