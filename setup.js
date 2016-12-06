@@ -22,7 +22,7 @@ var debug = false;
 var indexName = "index";
 
 console.log("-------------------------------------------------------");
-console.log("NativeScript Plugin Template                      v1.09");
+console.log("NativeScript Plugin Template                      v1.10");
 console.log("Copyright 2016, Nathanael Anderson / Master Technology.\r\n");
 console.log("nathan@master-technology.com							");
 console.log("-------------------------------------------------------");
@@ -506,7 +506,7 @@ function generateIndex(answers) {
 
     if (answers.script === "javascript") {
 
-        data += "function "+answers.plugin+"() { \r\n // Put in your initialization\r\n}\r\n\r\nmodules.exports = "+answers.plugin+";\r\n";
+        data += "function "+answers.plugin+"() { \r\n // Put in your initialization\r\n}\r\n\r\nmodule.exports = "+answers.plugin+";\r\n";
 
         if (fs.existsSync(homePath + "files/index.js")) {
             data = renderData(fs.readFileSync(homePath + "files/index.js").toString(), answers);
