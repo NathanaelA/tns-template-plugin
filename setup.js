@@ -145,7 +145,7 @@ if (!answers.name_type) {
 }
 
 if (!answers.github) {
-    questions.push({name: "github", question: "Github username? "});
+    questions.push({name: "github", question: "GitHub username? "});
 }
 if (!answers.name) {
     questions.push({name: 'name', question: "What is your name? "});
@@ -215,7 +215,7 @@ askQuestions(questions,
         //console.log("Answer is:", results);
 
         copyScript();
-        console.log("Generating readme.me...");
+        console.log("Generating README.md...");
         generateReadme(results);
         console.log("Generating package.json...");
         generatePackage(results);
